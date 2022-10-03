@@ -7,3 +7,8 @@ Updated for running in Python 3.6.
 Licensed under MIT License.
 
 Uses public code from mflaxman/coinkit and prusnak/coinkit
+
+# INSTALL
+
+- Tested in Python 3.6
+-) Install simplejson: python -m pip install simplejson
