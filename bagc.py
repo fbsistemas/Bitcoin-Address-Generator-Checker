@@ -5,7 +5,7 @@ import binascii
 import ecdsa
 import hashlib
 import simplejson
-import urllib2
+from urllib.request import urlopen
 import time
 
 class Address(object):
@@ -126,7 +126,7 @@ class WebApi(object):
 
     @classmethod
     def balance_bci(cls, address):
-        h = urllib2.urlopen('http://blockchain.info/rawaddr/%s' % address)
+        h = urlopen('http://blockchain.info/rawaddr/%s' % address)
         json = simplejson.load(h)
         h.close()
         f = float(json['final_balance'])/100000000
@@ -134,14 +134,14 @@ class WebApi(object):
 
     @classmethod
     def balance_bec(cls, address):
-        h = urllib2.urlopen('http://blockexplorer.com/q/addressbalance/%s' % address)
+        h = urlopen('http://blockexplorer.com/q/addressbalance/%s' % address)
         f = float(h.read())
         h.close()
         return f
 
     @classmethod
     def fullbalance_bci(cls, address):
-        h = urllib2.urlopen('http://blockchain.info/rawaddr/%s' % address)
+        h = urlopen('http://blockchain.info/rawaddr/%s' % address)
         json = simplejson.load(h)
         h.close()
         r = float(json['total_received'])/100000000
@@ -151,26 +151,27 @@ class WebApi(object):
 
     @classmethod
     def fullbalance_bec(cls, address):
-        h = urllib2.urlopen('http://blockexplorer.com/q/getreceivedbyaddress/%s' % address)
+        h = urlopen('http://blockexplorer.com/q/getreceivedbyaddress/%s' % address)
         r = float(h.read())
         h.close()
-        h = urllib2.urlopen('http://blockexplorer.com/q/getsentbyaddress/%s' % address)
+        h = urlopen('http://blockexplorer.com/q/getsentbyaddress/%s' % address)
         s = -float(h.read())
         h.close()
-        h = urllib2.urlopen('http://blockexplorer.com/q/addressbalance/%s' % address)
+        h = urlopen('http://blockexplorer.com/q/addressbalance/%s' % address)
         f = float(h.read())
         h.close()
         return (f, r, s)
 
-print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
-print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
-print '-*-*                                                                 *-*-'
-print '-*-*                     Bitcoin address checker                     *-*-'
-print '-*-*                       2017  Arthur Serck                        *-*-'
-print '-*-*                    (Uses public coinkit code)                   *-*-'
-print '-*-*                                                                 *-*-'
-print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
-print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
+print ('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+print ('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+print ('-*-*                                                                 *-*-')
+print ('-*-*                     Bitcoin address checker                     *-*-')
+print ('-*-*                       2017  Arthur Serck                        *-*-')
+print ('-*-*                       2022  Facundo Baru -review for Py 3.6-    *-*-')
+print ('-*-*                    (Uses public coinkit code)                   *-*-')
+print ('-*-*                                                                 *-*-')
+print ('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
+print ('-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-')
 print
 
 while True:
@@ -180,7 +181,7 @@ while True:
         # balance = WebApi.balance_bec(a.pub)
         # use blockchain.info
         balance = WebApi.balance_bci(a.pub)
-        print a.pub, a.priv, balance
+        print (a.pub, a.priv, balance)
         if balance > 0:
             break
         time.sleep(5)
@@ -188,8 +189,8 @@ while True:
 	    pass
 		
     else:
-	    print ' Found empty balance. Generating new address...'
+	    print (' Found empty balance. Generating new address...')
 
-print 'Hurray! Balance found, import private key into compatible software at your own discretion.'
+print ('Hurray! Balance found, import private key into compatible software at your own discretion.')
 time.sleep(500000)
 time.sleep(500000)
